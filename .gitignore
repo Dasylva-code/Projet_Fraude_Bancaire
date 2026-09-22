@@ -1,0 +1,6 @@
+# Jeu de données complet (144 Mo > limite GitHub de 100 Mo) : à télécharger depuis Kaggle
+data/creditcard.csv
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+.DS_Store
