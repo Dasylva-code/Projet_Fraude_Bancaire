@@ -14,7 +14,7 @@ Le projet vise donc à **minimiser un coût métier**, pas à maximiser une accu
 ## 2. Données
 - **Credit Card Fraud Detection** (Kaggle, ULB) : transactions de porteurs de cartes européens sur 2 jours.
 - Variables : `Time`, `Amount`, `V1`–`V28` (composantes PCA anonymisées), `Class` (1 = fraude).
-- Très fort déséquilibre : ≈ 0,17 % de fraudes. *(à confirmer avec tes chiffres après suppression des doublons)*
+- Très fort déséquilibre : ≈ 0,17 % de fraudes.
 - Voir `data/README.md` pour le téléchargement.
 
 ## 3. Méthodologie (protégée contre le Data Leakage)
@@ -28,29 +28,19 @@ Le projet vise donc à **minimiser un coût métier**, pas à maximiser une accu
 6. **Évaluation finale unique** sur le test : PR-AUC, Recall, Precision, matrice de confusion, coût vs « sans modèle ».
 7. **Explicabilité** : SHAP (globale dans `reports/`, locale dans l'application).
 
-## 4. Résultats
-*(à compléter avec les valeurs de `reports/metrics.json` après avoir lancé `train.py` sur le vrai dataset)*
-
-| Modèle | PR-AUC (CV, out-of-fold) |
-|---|---|
-| Régression logistique (baseline) | … |
-| XGBoost + pondération des classes | … |
-| XGBoost + SMOTE | … |
-
-Sur le jeu de test, au seuil choisi : PR-AUC = …, Recall = …, Precision = …, coût métier = … € (contre … € sans modèle).
 
 ![Courbe PR](reports/pr_curve.png)
 ![Matrice de confusion](reports/confusion_matrix.png)
 ![SHAP](reports/shap_summary.png)
 
-## 5. Limites
+## 4. Limites
 - Variables V1–V28 anonymisées : pas d'interprétation métier directe des facteurs.
 - Données de 2013, 2 jours seulement : pas de test de robustesse à la dérive temporelle (*concept drift*), or les schémas de fraude évoluent vite.
 - Le coût d'une fausse alerte (5 €) est une **hypothèse** ; le seuil optimal en dépend.
 - Peu de fraudes (quelques centaines) : les métriques ont une forte variance.
 - Pas de validation réglementaire, pas de monitoring en production.
 
-## 6. Lancer le projet
+## 5. Lancer le projet
 ```bash
 python -m venv .venv && source .venv/bin/activate      # Windows : .venv\Scripts\activate
 pip install -r requirements.txt
@@ -59,7 +49,7 @@ python train.py            # entraîne, évalue, sauvegarde modele_pipeline.pkl 
 streamlit run app.py       # ouvre l'application
 ```
 
-## 7. Structure
+## 6. Structure
 ```
 ├── data/                 # données (creditcard.csv à télécharger) + sample_test.csv pour l'app
 ├── notebooks/EDA.ipynb   # exploration
