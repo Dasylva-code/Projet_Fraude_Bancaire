@@ -2,8 +2,6 @@
 
 > ⚠️ **Projet pédagogique / expérimental.** Ce modèle n'est pas un outil de décision réglementaire et n'a pas été validé pour un usage bancaire réel.
 
-<!-- Ajoute ici une capture d'écran de l'application : ![App](reports/capture_app.png) -->
-
 ## 1. Problème métier
 Une banque doit identifier les transactions suspectes **avant** leur validation finale. Deux erreurs coûtent de l'argent :
 - une **fraude non détectée** coûte le montant de la transaction ;
@@ -18,6 +16,7 @@ Le projet vise donc à **minimiser un coût métier**, pas à maximiser une accu
 - Voir `data/README.md` pour le téléchargement.
 
 ## 3. Méthodologie (protégée contre le Data Leakage)
+
 1. **EDA** (`notebooks/EDA.ipynb`) : qualité, doublons, déséquilibre, montant/heure, variables discriminantes.
 2. **Doublons supprimés avant le split**, puis **split train/test stratifié** isolé dès le départ.
 3. **Un seul pipeline `imblearn`** (`features.py` + `train.py`) : heure de la journée → `RobustScaler` sur `Amount` → (SMOTE) → XGBoost.
@@ -53,11 +52,6 @@ Les 20 fraudes manquées concentrent l'essentiel du coût restant.
 - Le seuil de décision est choisi sur le centre d'un plateau de coût quasi plat entre 0,1 et 0,78,
   plutôt qu'un minimum ponctuel plus instable — mais le coût final ne dépend presque pas de ce choix
   précis dans cette zone.
-- Les variables V1–V28 sont anonymisées (PCA) : les 5 facteurs les plus influents selon SHAP
-  (V14, V4, V12, V10, V11) confirment l'écart de distribution observé en EDA, mais sans
-  interprétation métier possible.
-- Split aléatoire (pas temporel) sur 2 jours de données de 2013 : pas de test de robustesse
-  face à l'évolution des schémas de fraude dans le temps.
 
 ![Application — transaction bloquée](reports/app_transaction_bloquee.png)
 
@@ -78,7 +72,7 @@ optimistes — voir la section Résultats ci-dessus pour la mesure fiable, sur l
 
 ## 5. Limites
 - Variables V1–V28 anonymisées : pas d'interprétation métier directe des facteurs.
-- Données de 2013, 2 jours seulement : pas de test de robustesse à la dérive temporelle (*concept drift*), or les schémas de fraude évoluent vite.
+- Données de 2013, 2 jours seulement : pas de test de robustesse à la dérive temporelle, or les schémas de fraude évoluent vite.
 - Le coût d'une fausse alerte (5 €) est une **hypothèse** ; le seuil optimal en dépend.
 - Peu de fraudes (quelques centaines) : les métriques ont une forte variance.
 - Pas de validation réglementaire, pas de monitoring en production.
