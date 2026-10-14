@@ -33,34 +33,7 @@ Le projet vise donc à **minimiser un coût métier**, pas à maximiser une accu
 ![Matrice de confusion](reports/confusion_matrix.png)
 ![SHAP](reports/shap_summary.png)
 
-## 4. Limites
-- Variables V1–V28 anonymisées : pas d'interprétation métier directe des facteurs.
-- Données de 2013, 2 jours seulement : pas de test de robustesse à la dérive temporelle (*concept drift*), or les schémas de fraude évoluent vite.
-- Le coût d'une fausse alerte (5 €) est une **hypothèse** ; le seuil optimal en dépend.
-- Peu de fraudes (quelques centaines) : les métriques ont une forte variance.
-- Pas de validation réglementaire, pas de monitoring en production.
-
-## 5. Lancer le projet
-```bash
-python -m venv .venv && source .venv/bin/activate      # Windows : .venv\Scripts\activate
-pip install -r requirements.txt
-# placer creditcard.csv dans data/ (voir data/README.md)
-python train.py            # entraîne, évalue, sauvegarde modele_pipeline.pkl + reports/
-streamlit run app.py       # ouvre l'application
-```
-
-## 6. Structure
-```
-├── data/                 # données (creditcard.csv à télécharger) + sample_test.csv pour l'app
-├── notebooks/EDA.ipynb   # exploration
-├── reports/              # métriques et figures générées par train.py
-├── features.py           # feature engineering partagé (train + app)
-├── train.py              # pipeline, validation, seuil, évaluation, sauvegarde
-├── app.py                # application Streamlit
-├── modele_pipeline.pkl   # pipeline + seuil sauvegardés (joblib)
-└── requirements.txt
-```
-## Résultats
+## 4. Résultats
 
 | Modèle | PR-AUC (CV, out-of-fold) |
 |---|---|
@@ -68,7 +41,7 @@ streamlit run app.py       # ouvre l'application
 | XGBoost + pondération des classes | **0,850** |
 | XGBoost + SMOTE | 0,842 |
 
-Sur le jeu de test (283 726 transactions, 95 fraudes), au seuil retenu (0,51, centre du plateau de coût
+Sur le jeu de test (56 746 transactions, 95 fraudes), au seuil retenu (0,51, centre du plateau de coût
 sur la validation croisée) : PR-AUC = 0,819, Recall = 78,9 %, Precision = 93,75 %,
 coût métier = 3 814 € contre 14 766 € sans modèle (hypothèse : 5 € par fausse alerte).
 
@@ -102,3 +75,32 @@ de fraude à seulement 0,1 % et l'autorise, alors qu'il s'agit d'une fraude rée
 optimistes — voir la section Résultats ci-dessus pour la mesure fiable, sur le jeu de test seul)*
 
 ![Application — onglet Performances](reports/app_performances.png)
+
+## 5. Limites
+- Variables V1–V28 anonymisées : pas d'interprétation métier directe des facteurs.
+- Données de 2013, 2 jours seulement : pas de test de robustesse à la dérive temporelle (*concept drift*), or les schémas de fraude évoluent vite.
+- Le coût d'une fausse alerte (5 €) est une **hypothèse** ; le seuil optimal en dépend.
+- Peu de fraudes (quelques centaines) : les métriques ont une forte variance.
+- Pas de validation réglementaire, pas de monitoring en production.
+
+## 6. Lancer le projet
+```bash
+python -m venv .venv && source .venv/bin/activate      # Windows : .venv\Scripts\activate
+pip install -r requirements.txt
+# placer creditcard.csv dans data/ (voir data/README.md)
+python train.py            # entraîne, évalue, sauvegarde modele_pipeline.pkl + reports/
+streamlit run app.py       # ouvre l'application
+```
+
+## 7. Structure
+```
+├── data/                 # données (creditcard.csv à télécharger) + sample_test.csv pour l'app
+├── notebooks/EDA.ipynb   # exploration
+├── reports/              # métriques et figures générées par train.py
+├── features.py           # feature engineering partagé (train + app)
+├── train.py              # pipeline, validation, seuil, évaluation, sauvegarde
+├── app.py                # application Streamlit
+├── modele_pipeline.pkl   # pipeline + seuil sauvegardés (joblib)
+└── requirements.txt
+```
+
